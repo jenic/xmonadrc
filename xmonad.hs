@@ -4,7 +4,9 @@ import XMonad.Actions.GridSelect
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
-import XMonad.Hooks.FadeInactive
+-- Don't like it as much as I thought I would
+-- import XMonad.Hooks.FadeInactive
+import XMonad.Hooks.EwmhDesktops -- For _NET_ACTIVE_WINDOW
 import XMonad.Util.Run(spawnPipe)
 import XMonad.Util.EZConfig(additionalKeys)
 import XMonad.Layout.NoBorders
@@ -40,8 +42,8 @@ myManageHook = composeAll
     , isDialog                      --> doCenterFloat
     ]
 
-myFade = fadeInactiveLogHook fadeAmount
-    where fadeAmount = 0.85
+-- myFade = fadeInactiveLogHook fadeAmount
+--     where fadeAmount = 0.85
 
 -- Probably a better way to do this...
 myL1 = noBorders(myTabs) ||| smartBorders(tiled ||| mosaic 2 [3,2])
@@ -60,11 +62,12 @@ myLayoutHook = onWorkspace "2:web" myL2 $ myL1
 main = do
     xmproc <- spawnPipe "exec xmobar /home/jenic/.xmobarrc"
     xmproc <- spawnPipe "exec xmobar /home/jenic/.xmobar2rc"
-    xmonad $ defaultConfig
+    xmonad $ ewmh defaultConfig
         { workspaces = ["1:dev","2:web","3:chat","4:email","5","6","7"]
         , manageHook = manageDocks <+> (myManageHook <+> manageHook defaultConfig)
         , layoutHook = avoidStruts  $    myLayoutHook
-        , logHook = myFade <+> dynamicLogWithPP xmobarPP
+--        , logHook = myFade <+> dynamicLogWithPP xmobarPP
+        , logHook = dynamicLogWithPP xmobarPP
                 { ppOutput = hPutStrLn xmproc
                 , ppTitle = xmobarColor "green" "" . shorten 50
                 } >> updatePointer (Relative 0.5 0.5)
