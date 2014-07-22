@@ -31,7 +31,7 @@ myTab = defaultTheme
 
 myManageHook = composeAll
     [ className =? "Firefox"        --> doShift "2:web"
-    , className =? "Pidgin"         --> doShift "3:chat"
+--    , className =? "Pidgin"         --> doShift "3:chat"
     , className =? "Thunderbird"    --> doShift "4:email"
     , className =? "MPlayer"        --> doFloat
     , className =? "mplayer2"       --> doFloat
@@ -48,16 +48,18 @@ myManageHook = composeAll
 -- Probably a better way to do this...
 myL1 = noBorders(myTabs) ||| smartBorders(tiled ||| mosaic 2 [3,2])
     where
-        myTabs  = layoutHints $ tabbed shrinkText myTab
-        tiled   = layoutHints $ ResizableTall nmaster delta ratio []
+        myTabs  = tabbed shrinkText myTab
+        tiled   = layoutHintsToCenter $ ResizableTall nmaster delta ratio []
         nmaster = 1
-        delta   = 2/100
+        delta   = 3/100
         ratio   = 1/2
 myL2 = noBorders(Full ||| myTabs) ||| smartBorders(mosaic 2 [3,2])
     where
-        myTabs  = layoutHints $ tabbed shrinkText myTab
+        myTabs  = tabbed shrinkText myTab
 
 myLayoutHook = onWorkspace "2:web" myL2 $ myL1
+
+myHandleEventHook = hintsEventHook <+> docksEventHook
 
 main = do
     xmproc <- spawnPipe "exec xmobar /home/jenic/.xmobarrc"
@@ -65,7 +67,8 @@ main = do
     xmonad $ ewmh defaultConfig
         { workspaces = ["1:dev","2:web","3:chat","4:email","5","6","7"]
         , manageHook = manageDocks <+> (myManageHook <+> manageHook defaultConfig)
-        , layoutHook = avoidStruts  $    myLayoutHook
+        , layoutHook = avoidStruts $ myLayoutHook
+        , handleEventHook = myHandleEventHook
 --        , logHook = myFade <+> dynamicLogWithPP xmobarPP
         , logHook = dynamicLogWithPP xmobarPP
                 { ppOutput = hPutStrLn xmproc
