@@ -79,14 +79,21 @@ main = do
         , normalBorderColor = "#222222"
         , focusFollowsMouse = False
         , modMask = mod4Mask -- Action = Superkey
+        -- xev command is your friend
         } `additionalKeys`
         [ ((mod4Mask .|. shiftMask, xK_l), spawn "xscreensaver-command -lock")
-        , ((mod4Mask, xK_c), spawn "mpc -q toggle")
         , ((mod4Mask .|. controlMask, xK_s), spawn "sh /home/jenic/bin/cpyqs")
-        , ((mod4Mask, xK_b), spawn "mpc -q next")
-        , ((mod4Mask, xK_Up), spawn "mpc -q volume +10")
-        , ((mod4Mask, xK_Down), spawn "mpc -q volume -10")
-        , ((controlMask, xK_Print), spawn "scrot -s")
         , ((0, xK_Print), spawn "scrot")
+        , ((controlMask, xK_Print), spawn "scrot -s")
         , ((mod4Mask, xK_g), goToSelected defaultGSConfig)
+        -- MPD stuff
+        , ((mod4Mask, xK_c), spawn "mpc -q toggle")
+        , ((0, 0x1008ff14), spawn "mpc -q toggle")
+        , ((mod4Mask, xK_b), spawn "mpc -q next")
+        , ((0, 0x1008ff17), spawn "mpc -q next")
+        , ((0, 0x1008ff16), spawn "mpc -q prev")
+        , ((mod4Mask, xK_Up), spawn "mpc -q volume +10")
+        , ((0, 0x1008ff13), spawn "mpc -q volume +10")
+        , ((mod4Mask, xK_Down), spawn "mpc -q volume -10")
+        , ((0, 0x1008ff11), spawn "mpc -q volume -10")
         ]
