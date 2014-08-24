@@ -12,10 +12,12 @@ import XMonad.Util.EZConfig(additionalKeys)
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Tabbed
 import XMonad.Layout.ResizableTile
-import XMonad.Layout.Mosaic
+import XMonad.Layout.Grid
 import XMonad.Layout.LayoutHints
 import XMonad.Layout.PerWorkspace
+import XMonad.Layout.Spacing
 import System.IO
+import System.Exit -- graceful closing of X11
 
 myTab = defaultTheme
     { activeColor         = "black"
@@ -46,16 +48,18 @@ myManageHook = composeAll
 --     where fadeAmount = 0.85
 
 -- Probably a better way to do this...
-myL1 = noBorders(myTabs) ||| smartBorders(tiled ||| mosaic 2 [3,2])
+myL1 = noBorders(myTabs) ||| smartBorders(tiled ||| grid)
     where
         myTabs  = tabbed shrinkText myTab
-        tiled   = layoutHintsToCenter $ ResizableTall nmaster delta ratio []
+        tiled   = layoutHintsToCenter $ smartSpacing 2 $ ResizableTall nmaster delta ratio []
+        grid    = smartSpacing 6 $ Grid
         nmaster = 1
         delta   = 3/100
         ratio   = 1/2
-myL2 = noBorders(Full ||| myTabs) ||| smartBorders(mosaic 2 [3,2])
+myL2 = noBorders(Full ||| myTabs) ||| smartBorders(grid)
     where
         myTabs  = tabbed shrinkText myTab
+        grid    = smartSpacing 6 $ Grid
 
 myLayoutHook = onWorkspace "2:web" myL2 $ myL1
 
