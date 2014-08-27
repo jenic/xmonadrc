@@ -9,6 +9,7 @@ import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.EwmhDesktops -- For _NET_ACTIVE_WINDOW
 import XMonad.Util.Run(spawnPipe)
 import XMonad.Util.EZConfig(additionalKeys)
+import XMonad.Util.Paste
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Tabbed
 import XMonad.Layout.ResizableTile
@@ -90,6 +91,7 @@ main = do
         , ((0, xK_Print), spawn "scrot")
         , ((controlMask, xK_Print), spawn "scrot -s")
         , ((mod4Mask, xK_g), goToSelected defaultGSConfig)
+        , ((0, xK_Insert), pasteSelection)
         -- MPD stuff
         , ((mod4Mask, xK_c), spawn "mpc -q toggle")
         , ((0, 0x1008ff14), spawn "mpc -q toggle")
