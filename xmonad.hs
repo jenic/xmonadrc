@@ -32,10 +32,10 @@ myTab = defaultTheme
     , urgentTextColor     = "yellow"
     }
 
-myManageHook = composeAll
+myMHook = composeAll
     [ className =? "Firefox"        --> doShift "2:web"
 --    , className =? "Pidgin"         --> doShift "3:chat"
---    , className =? "Thunderbird"    --> doShift "4:email"
+--    , className =? "Thunderbird"    --> doShift "4:work"
     , className =? "MPlayer"        --> doFloat
     , className =? "mplayer2"       --> doFloat
     , className =? "mpv"            --> doFloat
@@ -70,8 +70,8 @@ main = do
     xmproc <- spawnPipe "exec xmobar /home/jenic/.xmobarrc"
     xmproc <- spawnPipe "exec xmobar /home/jenic/.xmobar2rc"
     xmonad $ ewmh defaultConfig
-        { workspaces = ["1:dev","2:web","3:chat","4:email","5","6","7"]
-        , manageHook = manageDocks <+> (myManageHook <+> manageHook defaultConfig)
+        { workspaces = ["1:dev","2:web","3:chat","4:work","5"]
+        , manageHook = manageDocks <+> (myMHook <+> manageHook defaultConfig)
         , layoutHook = avoidStruts $ myLayoutHook
         , handleEventHook = myHandleEventHook
 --        , logHook = myFade <+> dynamicLogWithPP xmobarPP
