@@ -1,13 +1,15 @@
 import XMonad
 import XMonad.Actions.UpdatePointer
 import XMonad.Actions.GridSelect
+import XMonad.Actions.WindowGo
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 -- Don't like it as much as I thought I would
+-- Seriously future self. stahp.
 -- import XMonad.Hooks.FadeInactive
 import XMonad.Hooks.EwmhDesktops -- For _NET_ACTIVE_WINDOW
-import XMonad.Util.Run(spawnPipe)
+import XMonad.Util.Run
 import XMonad.Util.EZConfig(additionalKeys)
 import XMonad.Util.Paste
 import XMonad.Layout.NoBorders
@@ -63,14 +65,15 @@ myL2 = noBorders(Full ||| myTabs) ||| smartBorders(grid)
         grid    = smartSpacing 6 $ Grid
 
 myLayoutHook = onWorkspace "2:web" myL2 $ myL1
-
 myHandleEventHook = hintsEventHook <+> docksEventHook
+myBrowser = "Firefox"
+myTerminal = "exec /usr/bin/urxvtc"
 
 main = do
     xmproc <- spawnPipe "exec xmobar /home/jenic/.xmobarrc"
     xmproc <- spawnPipe "exec xmobar /home/jenic/.xmobar2rc"
     xmonad $ ewmh defaultConfig
-        { workspaces = ["1:dev","2:web","3:chat","4:work","5"]
+        { workspaces = ["1:dev","2:web","3","4","5"]
         , manageHook = manageDocks <+> (myMHook <+> manageHook defaultConfig)
         , layoutHook = avoidStruts $ myLayoutHook
         , handleEventHook = myHandleEventHook
@@ -79,7 +82,7 @@ main = do
                 { ppOutput = hPutStrLn xmproc
                 , ppTitle = xmobarColor "green" "" . shorten 50
                 } >> updatePointer (Relative 0.5 0.5)
-        , terminal = "exec /usr/bin/urxvtc"
+        , terminal = myTerminal
         , focusedBorderColor = "#333333"
         , normalBorderColor = "#222222"
         , focusFollowsMouse = False
@@ -92,6 +95,8 @@ main = do
         , ((controlMask, xK_Print), spawn "scrot -s")
         , ((mod4Mask, xK_g), goToSelected defaultGSConfig)
         , ((0, xK_Insert), pasteSelection)
+        , ((mod4Mask, xK_f), runOrRaise myBrowser (className =? "Firefox"))
+        , ((mod4Mask, xK_m), raiseMaybe (runInTerm "-title mutt" "mutt") (title =? "mutt"))
         -- MPD stuff
         , ((mod4Mask, xK_c), spawn "mpc -q toggle")
         , ((0, 0x1008ff14), spawn "mpc -q toggle")
