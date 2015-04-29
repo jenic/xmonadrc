@@ -19,6 +19,8 @@ import XMonad.Layout.Grid
 import XMonad.Layout.LayoutHints
 import XMonad.Layout.PerWorkspace
 import XMonad.Layout.Spacing
+-- Data.List provides isPrefixOf isSuffixOf and isInfixOf
+import Data.List
 import System.IO
 import System.Exit -- graceful closing of X11
 
@@ -96,7 +98,17 @@ main = do
         , ((mod4Mask, xK_g), goToSelected defaultGSConfig)
         , ((0, xK_Insert), pasteSelection)
         , ((mod4Mask, xK_f), runOrRaise myBrowser (className =? "Firefox"))
-        , ((mod4Mask, xK_m), raiseMaybe (runInTerm "-title mutt" "mutt") (title =? "mutt"))
+        -- Mail key, XF86Mail
+        ,   ( (0, 0x1008ff19)
+            , raiseMaybe (runInTerm "-title mutt" "mutt") (title =? "mutt")
+            )
+        -- Lol, HomePage key (XF86HomePage)
+        ,   ( (0, 0x1008ff18)
+            , raiseMaybe
+                (runInTerm "-title WeeChat" "ssh tenebrae")
+                (fmap ("WeeChat" `isInfixOf`) title)
+            )
+        , ((mod4Mask .|. controlMask, xK_p), spawn "play")
         -- MPD stuff
         , ((mod4Mask, xK_c), safeSpawn "mpc" ["-q", "toggle"])
         , ((0, 0x1008ff14), safeSpawn "mpc" ["-q", "toggle"])
