@@ -37,16 +37,17 @@ myTab = defaultTheme
     }
 
 myMHook = composeAll
-    [ className =? "Firefox"        --> doShift "2:web"
+    [ className =? "Firefox"                --> doShift "2:web"
 --    , className =? "Pidgin"         --> doShift "3:chat"
+    , (fmap ("WeeChat" `isInfixOf`) title)  --> doShift "3"
 --    , className =? "Thunderbird"    --> doShift "4:work"
-    , className =? "MPlayer"        --> doFloat
-    , className =? "mplayer2"       --> doFloat
-    , className =? "mpv"            --> doFloat
-    , className =? "Gtkdialog"      --> doFloat
-    , resource  =? "desktop_window" --> doIgnore
-    , isFullscreen                  --> doFullFloat
-    , isDialog                      --> doCenterFloat
+    , className =? "MPlayer"                --> doFloat
+    , className =? "mplayer2"               --> doFloat
+    , className =? "mpv"                    --> doFloat
+    , className =? "Gtkdialog"              --> doFloat
+    , resource  =? "desktop_window"         --> doIgnore
+    , isFullscreen                          --> doFullFloat
+    , isDialog                              --> doCenterFloat
     ]
 
 -- myFade = fadeInactiveLogHook fadeAmount
@@ -68,7 +69,7 @@ myL2 = noBorders(Full ||| myTabs) ||| smartBorders(grid)
 
 myLayoutHook = onWorkspace "2:web" myL2 $ myL1
 myHandleEventHook = hintsEventHook <+> docksEventHook
-myBrowser = "Firefox"
+myBrowser = "firefox"
 myTerminal = "exec /usr/bin/urxvtc"
 
 main = do
