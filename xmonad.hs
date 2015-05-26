@@ -109,7 +109,13 @@ main = do
                 (runInTerm "-title WeeChat" "ssh tenebrae")
                 (fmap ("WeeChat" `isInfixOf`) title)
             )
-        , ((mod4Mask .|. controlMask, xK_p), spawn "play")
+        , ((mod4Mask .|. controlMask, xK_p), runInTerm "-title Youtube" "play")
+        -- Doesnt really work right now...
+        ,   ( (mod4Mask .|. shiftMask, xK_m)
+            , raiseMaybe
+                (runInTerm "-title ncmpcpp" "ncmpcpp")
+                (fmap ("ncmpcpp" `isInfixOf`) title)
+            )
         -- MPD stuff
         , ((mod4Mask, xK_c), safeSpawn "mpc" ["-q", "toggle"])
         , ((0, 0x1008ff14), safeSpawn "mpc" ["-q", "toggle"])
